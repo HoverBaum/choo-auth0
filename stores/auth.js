@@ -7,7 +7,6 @@ const webAuth = new auth0.WebAuth({
   domain: process.env.DOMAIN,
   clientID: process.env.CLIENT_ID,
   responseType: 'token',
-  audience: 'https://localhost:8080',
   scope: 'choo:auth0',
   redirectUri: 'https://localhost:8080/dashboard'
 })
