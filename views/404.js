@@ -1,6 +1,6 @@
-var html = require('choo/html')
+const html = require('choo/html')
 
-var TITLE = 'secured-choo - route not found'
+const TITLE = 'secured-choo - route not found'
 
 module.exports = view
 

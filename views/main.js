@@ -2,9 +2,9 @@
  * Landing page of our application that users can start their login from.
  */
 
-var html = require('choo/html')
+const html = require('choo/html')
 
-var TITLE = 'secured-choo - main'
+const TITLE = 'secured-choo - main'
 
 module.exports = view
 

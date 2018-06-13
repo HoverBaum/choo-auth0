@@ -1,7 +1,7 @@
-var html = require('choo/html')
+const html = require('choo/html')
 const Identicon = require('identicon.js')
 
-var TITLE = 'dashboard'
+const TITLE = 'dashboard'
 
 module.exports = view
 
@@ -9,7 +9,7 @@ function view (state, emit) {
   if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE)
 
   // create a base64 encoded PNG for the logged in user.
-  var avatarData = state.auth && state.auth.token && new Identicon(state.auth.token, 420).toString()
+  const avatarData = state.auth && state.auth.token && new Identicon(state.auth.token, 420).toString()
 
   return html`
     <body class="lh-copy sans-serif">

@@ -3,7 +3,7 @@ const choo = require('choo')
 
 css('tachyons')
 
-var app = choo()
+const app = choo()
 app.use(require('choo-devtools')())
 
 app.use(require('./stores/auth'))
