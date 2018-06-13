@@ -20,6 +20,11 @@ function authStore (state, emitter) {
 
   emitter.on('auth:startAuthentication', () => webAuth.authorize())
 
+  emitter.on('auth:logout', () => {
+    window.localStorage.clear('token')
+    emitter.emit(state.events.PUSHSTATE, '/')
+  })
+
   // If we are serverside at this point return ebcause now we will look at authentication on the client.
   if (typeof window === 'undefined') return
 
