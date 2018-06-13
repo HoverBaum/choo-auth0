@@ -6,6 +6,8 @@ const TITLE = 'dashboard'
 module.exports = view
 
 function view (state, emit) {
+  if (!state.auth.loggedIn) return html`<div></div>`
+
   if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE)
 
   // create a base64 encoded PNG for the logged in user.

@@ -22,6 +22,7 @@ function authStore (state, emitter) {
 
   emitter.on('auth:logout', () => {
     window.localStorage.clear('token')
+    state.auth.loggedIn = false
     emitter.emit(state.events.PUSHSTATE, '/')
   })
 
@@ -37,6 +38,7 @@ function authStore (state, emitter) {
     state.auth.tokenExpirationDate = JSON.parse(storedTokenExpirationDate)
     state.auth.token = JSON.parse(storedToken)
     state.auth.loggedIn = true
+    emitter.emit(state.events.RENDER)
   }
 
   // On page load check if there is a hash that we should handle.
@@ -51,6 +53,7 @@ function authStore (state, emitter) {
       state.auth.token = authResult.accessToken
       state.auth.tokenExpirationDate = tokenExpiration
       state.auth.loggedIn = true
+      emitter.emit(state.events.RENDER)
 
       // Remove the hash after using is.
       emitter.emit(state.events.REPLACESTATE, window.location.pathname)
