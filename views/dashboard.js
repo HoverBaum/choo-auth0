@@ -11,7 +11,8 @@ function view (state, emit) {
   if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE)
 
   // create a base64 encoded PNG for the logged in user.
-  const avatarData = state.auth && state.auth.token && new Identicon(state.auth.token, 420).toString()
+  const userId = state.auth && state.auth.token && JSON.parse(window.atob(state.auth.token.split('.')[1])).sub
+  const avatarData = new Identicon(userId, 420).toString()
 
   return html`
     <body class="lh-copy sans-serif">
@@ -23,13 +24,14 @@ function view (state, emit) {
         <img src="data:image/png;base64,${avatarData}">
 
         <p>And here is all the data we are getting from Auth0. The token is used to generate the avatar above.<br />
-        That means you get a new one each time you log out.</p>
+        More specifically we are using your ID communicated as the subject within the token.<br />
+        For you that is: "${userId}".</p>
 
         <code class="mw8">
           <pre style="white-space: pre-wrap; word-wrap: break-word;">${JSON.stringify(state.auth, null, 2)}</pre>
         </code>
 
-        <p>Let's try to log out and see the avatar update after logging in again.</p>
+        <p>Let's try to log out in again.</p>
 
         <button
           class="f5 black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box bg-white pointer"
@@ -37,6 +39,9 @@ function view (state, emit) {
         >
           Logout
         </button>
+
+        <p>Or <a href="/">go to the landing page</a> to see how the site interacts with logged in users.</p>
+
       </main>
     </body>
   `

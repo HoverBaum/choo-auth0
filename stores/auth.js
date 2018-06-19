@@ -8,6 +8,10 @@ const webAuth = new auth0.WebAuth({
   clientID: process.env.CLIENT_ID,
   responseType: 'token',
   scope: 'choo:auth0',
+  // You probably want to change this to soemthing like api.yourdomain.com
+  audience: 'https://jsonplaceholder.typicode.com/',
+  // Where users are getting redirected to after login.
+  // Remember to add this endpoint in your applications dashboard.
   redirectUri: 'https://localhost:8080/dashboard'
 })
 
