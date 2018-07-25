@@ -24,7 +24,7 @@ function view (state, emit) {
         <img src="data:image/png;base64,${avatarData}">
 
         <p>And here is all the data we are getting from Auth0. The token is used to generate the avatar above.<br />
-        More specifically we are using your ID communicated as the subject within the token.<br />
+        More specifically we are using your ID communicated as the subject within the idToken.<br />
         For you that is: "${userId}".</p>
 
         <code class="mw8">

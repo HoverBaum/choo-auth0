@@ -6,24 +6,22 @@ const auth0 = require('auth0-js')
 const webAuth = new auth0.WebAuth({
   domain: process.env.DOMAIN,
   clientID: process.env.CLIENT_ID,
-  responseType: 'token id_token',
+  responseType: 'id_token',
   scope: 'choo:auth0',
-  // You probably want to change this to soemthing like api.yourdomain.com
-  audience: 'https://jsonplaceholder.typicode.com/',
   // Where users are getting redirected to after login.
   // Remember to add this endpoint in your applications dashboard.
   redirectUri: 'https://localhost:8080/dashboard'
 })
 
 function authStore (state, emitter) {
+  // Our initial auth state.
   state.auth = {
     loggedIn: false,
-    token: null,
-    tokenExpirationDate: null,
     idToken: null,
     userId: null
   }
 
+  // Map action unto starting authorization which will redirect user to login.
   emitter.on('auth:startAuthentication', () => webAuth.authorize())
 
   emitter.on('auth:logout', () => {
@@ -37,14 +35,10 @@ function authStore (state, emitter) {
 
   // Check local storage if we are logged in.
   // This was potentially just set.
-  const storedTokenExpirationDate = window.localStorage.tokenExpirationDate
-  const storedToken = window.localStorage.token
   const storedIdToken = window.localStorage.idToken
   const storedUserId = window.localStorage.userId
-  if (storedTokenExpirationDate && storedToken && storedIdToken && storedUserId) {
+  if (storedIdToken && storedUserId) {
     // Save authentication information to the state.
-    state.auth.tokenExpirationDate = JSON.parse(storedTokenExpirationDate)
-    state.auth.token = JSON.parse(storedToken)
     state.auth.loggedIn = true
     state.auth.idToken = JSON.parse(storedIdToken)
     state.auth.userId = storedUserId
@@ -53,17 +47,14 @@ function authStore (state, emitter) {
 
   // On page load check if there is a hash that we should handle.
   webAuth.parseHash((err, authResult) => {
-    if (authResult && authResult.accessToken) {
+    if (authResult) {
       // Save authentication information to localStorage.
-      const tokenExpiration = authResult.expiresIn * 1000 + new Date().getTime()
-      window.localStorage.tokenExpirationDate = JSON.stringify(tokenExpiration)
-      window.localStorage.token = JSON.stringify(authResult.accessToken)
       window.localStorage.idToken = JSON.stringify(authResult.idToken)
-      window.localStorage.userId = JSON.stringify(authResult.idTokenPayload.sub)
+      // Some values are already strings and don't need to be stringified.
+      window.localStorage.userId = authResult.idTokenPayload.sub
       console.log(authResult)
 
-      state.auth.token = authResult.accessToken
-      state.auth.tokenExpirationDate = tokenExpiration
+      // Now update the store.
       state.auth.loggedIn = true
       state.auth.idToken = authResult.idToken
       state.auth.userId = authResult.idTokenPayload.sub
