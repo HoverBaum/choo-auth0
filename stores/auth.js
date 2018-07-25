@@ -6,7 +6,7 @@ const auth0 = require('auth0-js')
 const webAuth = new auth0.WebAuth({
   domain: process.env.DOMAIN,
   clientID: process.env.CLIENT_ID,
-  responseType: 'token',
+  responseType: 'token id_token',
   scope: 'choo:auth0',
   // You probably want to change this to soemthing like api.yourdomain.com
   audience: 'https://jsonplaceholder.typicode.com/',
@@ -19,7 +19,9 @@ function authStore (state, emitter) {
   state.auth = {
     loggedIn: false,
     token: null,
-    tokenExpirationDate: null
+    tokenExpirationDate: null,
+    idToken: null,
+    userId: null
   }
 
   emitter.on('auth:startAuthentication', () => webAuth.authorize())
@@ -37,11 +39,15 @@ function authStore (state, emitter) {
   // This was potentially just set.
   const storedTokenExpirationDate = window.localStorage.tokenExpirationDate
   const storedToken = window.localStorage.token
-  if (storedTokenExpirationDate && storedToken) {
+  const storedIdToken = window.localStorage.idToken
+  const storedUserId = window.localStorage.userId
+  if (storedTokenExpirationDate && storedToken && storedIdToken && storedUserId) {
     // Save authentication information to the state.
     state.auth.tokenExpirationDate = JSON.parse(storedTokenExpirationDate)
     state.auth.token = JSON.parse(storedToken)
     state.auth.loggedIn = true
+    state.auth.idToken = JSON.parse(storedIdToken)
+    state.auth.userId = storedUserId
     emitter.emit(state.events.RENDER)
   }
 
@@ -52,11 +58,15 @@ function authStore (state, emitter) {
       const tokenExpiration = authResult.expiresIn * 1000 + new Date().getTime()
       window.localStorage.tokenExpirationDate = JSON.stringify(tokenExpiration)
       window.localStorage.token = JSON.stringify(authResult.accessToken)
+      window.localStorage.idToken = JSON.stringify(authResult.idToken)
+      window.localStorage.userId = JSON.stringify(authResult.idTokenPayload.sub)
       console.log(authResult)
 
       state.auth.token = authResult.accessToken
       state.auth.tokenExpirationDate = tokenExpiration
       state.auth.loggedIn = true
+      state.auth.idToken = authResult.idToken
+      state.auth.userId = authResult.idTokenPayload.sub
       emitter.emit(state.events.RENDER)
 
       // Remove the hash after using is.

@@ -11,7 +11,7 @@ function view (state, emit) {
   if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE)
 
   // create a base64 encoded PNG for the logged in user.
-  const userId = state.auth && state.auth.token && JSON.parse(window.atob(state.auth.token.split('.')[1])).sub
+  const userId = state.auth && state.auth.userId
   const avatarData = new Identicon(userId, 420).toString()
 
   return html`
