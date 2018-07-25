@@ -17,13 +17,13 @@ function view (state, emit) {
   return html`
     <body class="lh-copy sans-serif">
       <main class="pa3 cf center">
-        <h1>Welcome to your dashboard</h1>
+        <h1>Welcome to your dashboard 🎉</h1>
 
         <p>Here is an avatar generated just for you:</p>
 
         <img src="data:image/png;base64,${avatarData}">
 
-        <p>And here is all the data we are getting from Auth0. The token is used to generate the avatar above.<br />
+        <p>And here is all the data from the auth part of our store. The token is used to generate the avatar above.<br />
         More specifically we are using your ID communicated as the subject within the idToken.<br />
         For you that is: "${userId}".</p>
 
@@ -31,7 +31,7 @@ function view (state, emit) {
           <pre style="white-space: pre-wrap; word-wrap: break-word;">${JSON.stringify(state.auth, null, 2)}</pre>
         </code>
 
-        <p>Let's try to log out in again.</p>
+        <p>Let's try to log out and in again.</p>
 
         <button
           class="f5 black bg-animate hover-bg-black hover-white inline-flex items-center pa3 ba border-box bg-white pointer"
