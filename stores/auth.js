@@ -10,7 +10,7 @@ const webAuth = new auth0.WebAuth({
   scope: 'choo:auth0',
   // Where users are getting redirected to after login.
   // Remember to add this endpoint in your applications dashboard.
-  redirectUri: 'https://localhost:8080/dashboard'
+  redirectUri: `${window.location.origin}/dashboard`
 })
 
 function authStore (state, emitter) {
